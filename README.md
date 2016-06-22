@@ -69,7 +69,7 @@ import MyComponent from 'path/to/MyComponent'
 
 const SearchRequestForm = connectRequest({
   route: constants.SEARCH_PLANS_ROUTE,
-  requestOnMountParams: true,
+  requestOnMountParams: {name: 'First', last: 'Last'},
 })(MyComponent)
 
 ```
@@ -85,7 +85,7 @@ import MyComponent from 'path/to/MyComponent'
 
 const SearchRequestForm = connectRequest({
   route: constants.SEARCH_PLANS_ROUTE,
-  requestOnMountBody: true,
+  requestOnMountBody: {name: 'First', last: 'Last'},
 })(MyComponent)
 
 ```
