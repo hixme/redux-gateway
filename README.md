@@ -9,6 +9,7 @@ This gives you access to the reducer, constants, actions, and selectors availabl
 `import { connectRequest } from 'redux-gateway'`
 
 connectRequest is a higher-order-component that connects the request object to another component.  You can listen in on request events and dispatch other actions.
+
 ```javascript
 import { connectRequest } from 'redux-gateway'
 import MyComponent from 'path/to/MyComponent'
@@ -57,6 +58,39 @@ const SearchRequestForm = connectRequest({
 })(MyComponent)
 
 ```
+
+#### On mount request with params
+
+For GET requests that require parameters when triggered on mount, use `requestOnMountParams`
+
+```javascript
+import { connectRequest } from 'redux-gateway'
+import MyComponent from 'path/to/MyComponent'
+
+const SearchRequestForm = connectRequest({
+  route: constants.SEARCH_PLANS_ROUTE,
+  requestOnMountParams: true,
+})(MyComponent)
+
+```
+
+
+#### On mount request with body
+
+For POST requests that require parameters when triggered on mount, use `requestOnMountBody`
+
+```javascript
+import { connectRequest } from 'redux-gateway'
+import MyComponent from 'path/to/MyComponent'
+
+const SearchRequestForm = connectRequest({
+  route: constants.SEARCH_PLANS_ROUTE,
+  requestOnMountBody: true,
+})(MyComponent)
+
+```
+
+
 
 ### Listen for request events
 
