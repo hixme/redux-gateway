@@ -1,0 +1,36 @@
+{
+  "name": "redux-gateway",
+  "version": "0.1.0",
+  "description": "API Gateway request lifecycle with redux",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "babel ./src -d ./lib/ --copy-files"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/hixme/redux-gateway.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/hixme/redux-gateway#readme",
+  "dependencies": {
+    "babel-cli": "^6.5.1",
+    "babel-core": "^6.8.0",
+    "babel-eslint": "^6.0.0",
+    "babel-loader": "^6.2.0",
+    "babel-plugin-react-transform": "^2.0.0",
+    "babel-plugin-transform-decorators-legacy": "^1.3.4",
+    "babel-plugin-transform-runtime": "^6.3.13",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babel-preset-stage-0": "^6.3.13",
+    "babel-register": "^6.3.13",
+    "babel-runtime": "^6.3.19",
+    "react": "^0.14.7",
+    "react-dom": "^0.14.0"
+  },
+  "devDependencies": {
+    "webpack": "^1.13.1"
+  }
+}
