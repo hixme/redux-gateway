@@ -5,7 +5,8 @@ import { requestModel } from './request-reducer'
 export const getAllRequests = createSelector(
   state => state[NAME],
   gateway => {
-    return gateway.requests
+    // return empty object if reducer hasn't been initialized
+    return gateway ? gateway.requests : {}
   }
 )
 

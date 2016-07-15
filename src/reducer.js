@@ -12,11 +12,6 @@ const initialState = {
 }
 
 export default createReducer(initialState, {
-  [t.SET_CLIENT]: (state, client) => {
-    return Object.assign({}, state, {
-      client: client
-    })
-  },
   [t.REQUEST_INIT]: (state, payload) => {
     var request = reqReducer(undefined, {type: t.REQUEST_INIT, payload})
 
