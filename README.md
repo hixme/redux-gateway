@@ -74,7 +74,6 @@ const SearchRequestForm = connectRequest({
 
 ```
 
-
 #### On mount request with body
 
 For POST requests that require parameters when triggered on mount, use `requestOnMountBody`
@@ -89,7 +88,6 @@ const SearchRequestForm = connectRequest({
 })(MyComponent)
 
 ```
-
 
 
 ### Listen for request events

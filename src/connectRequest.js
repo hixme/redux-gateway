@@ -91,7 +91,7 @@ export default (params) => {
     }
 
     const mapRequestDispatchToProps = (dispatch) => {
-      return actions
+      return {dispatch, ...actions}
     }
 
     return connect(mapRequestStateToProps, mapRequestDispatchToProps)(GatewayEvent)

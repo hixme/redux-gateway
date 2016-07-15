@@ -1,10 +1,5 @@
 import t from './actionTypes'
-import { gatewayRequest } from 'modules/gateway-manager'
-
-export const setClient = (client) => ({
-  type: t.SET_CLIENT,
-  client: client
-})
+import { gatewayRequest } from './gateway'
 
 export const requestInit = (name) => {
   return {
