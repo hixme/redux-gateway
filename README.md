@@ -53,7 +53,7 @@ import { connectRequest } from 'redux-gateway'
 import MyComponent from 'path/to/MyComponent'
 
 const SearchRequestForm = connectRequest({
-  route: constants.SEARCH_PLANS_ROUTE,
+  route: 'searchPlansRoute',
   requestOnMount: true,
 })(MyComponent)
 
@@ -68,8 +68,8 @@ import { connectRequest } from 'redux-gateway'
 import MyComponent from 'path/to/MyComponent'
 
 const SearchRequestForm = connectRequest({
-  route: constants.SEARCH_PLANS_ROUTE,
-  requestOnMountParams: {name: 'First', last: 'Last'},
+  route: 'searchPlansRoute',
+  requestOnMountParams: (props) => ({name: 'First', last: 'Last'}),
 })(MyComponent)
 
 ```
@@ -83,8 +83,28 @@ import { connectRequest } from 'redux-gateway'
 import MyComponent from 'path/to/MyComponent'
 
 const SearchRequestForm = connectRequest({
-  route: constants.SEARCH_PLANS_ROUTE,
-  requestOnMountBody: {name: 'First', last: 'Last'},
+  route: 'searchPlansRoute',
+  requestOnMountBody: (props) => ({name: 'First', last: 'Last'}),
+})(MyComponent)
+
+```
+
+#### mapStateToProps / mapDispatchToProps
+
+You can map state and dispatch to props, and transform the request object as needed.
+
+```javascript
+import { connectRequest } from 'redux-gateway'
+import MyComponent from 'path/to/MyComponent'
+
+const SearchRequestForm = connectRequest({
+  route: 'searchPlansRoute',
+  requestOnMountParams: (props) => ({name: 'First', last: 'Last'}),
+  mapStateToProps: (state, request) => {
+    return {
+      plans: request.response,
+    }
+  }
 })(MyComponent)
 
 ```
