@@ -10,6 +10,35 @@ export default (params) => {
   }
 
   return (View) => {
+    // get configuration for state and dispatch props
+    const { mapStateToProps, mapDispatchToProps } = params
+
+    const mapViewStateToProps = (state) => {
+      const request = selectors.getRequestByName(state, routeName)
+
+      // allow the user to configure the state and request props
+      if (mapStateToProps) {
+        return {
+          ...mapStateToProps(state, request),
+          request
+        }
+      }
+
+      // default - map request to the view
+      return {
+        request
+      }
+    }
+
+    const mapViewDispatchToProps = (dispatch, request) => {
+      if (mapDispatchToProps) {
+        return mapDispatchToProps(dispatch)
+      }
+
+      return actions
+    }
+    const ConnectedView = connect(mapViewStateToProps, mapViewDispatchToProps)(View)
+
     class GatewayEvent extends Component {
       static propTypes = {
         request: PropTypes.object,
@@ -38,8 +67,8 @@ export default (params) => {
           const requestParams = {
             route,
             name,
-            params: requestOnMountParams,
-            body: requestOnMountBody
+            params: requestOnMountParams ? requestOnMountParams(this.props) : null,
+            body: requestOnMountBody ? requestOnMountBody(this.props) : null
           }
 
           this.props.dispatch(this.props.createRequest(requestParams))
@@ -80,7 +109,7 @@ export default (params) => {
       }
 
       render () {
-        return (<View {...this.props} />)
+        return (<ConnectedView {...this.props} />)
       }
     }
 
@@ -90,9 +119,7 @@ export default (params) => {
       }
     }
 
-    const mapRequestDispatchToProps = (dispatch) => {
-      return {dispatch, ...actions}
-    }
+    const mapRequestDispatchToProps = (dispatch) => ({...actions, dispatch})
 
     return connect(mapRequestStateToProps, mapRequestDispatchToProps)(GatewayEvent)
   }
