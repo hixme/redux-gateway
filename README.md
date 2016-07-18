@@ -29,19 +29,45 @@ const SearchRequestForm = connectRequest({
 
 #### Create request / dispatch request
 ```javascript
-import gateway from 'redux-gateway'
+import gateway, { createRequest } from 'redux-gateway'
 
 // create request
 gateway.actions.createRequest({route: 'apiGatewayRoute'})
+createRequest({route: 'apiGatewayRoute'})
 
 // create GET request with params
 gateway.actions.createRequest({route: 'apiGatewayRoute', params: {name: 'value'}})
+createRequest({route: 'apiGatewayRoute', params: {name: 'value'}})
 
 // create POST request with body
 gateway.actions.createRequest({route: 'apiGatewayRoute', body: {name: 'value'}})
+createRequest({route: 'apiGatewayRoute', body: {name: 'value'}})
 
 // with dispatch
 dispatch(gateway.actions.createRequest({route: 'apiGatewayRoute'}))
+dispatch(createRequest({route: 'apiGatewayRoute'}))
+
+```
+
+#### Get request selector
+To use and transform the data from the request, use the `getRequestByName` by name selector
+```javascript
+import gateway, { getRequestByName }
+
+// usage
+gateway.selectors.getRequestByName(state, 'requestRouteName')
+getRequestByName(state, 'requestRouteName')
+
+// With connect from react-redux, you can map the request properties
+import { connect } from 'react-redux'
+import MyComponent from '/path/to/component'
+connect((state) => {
+  const req = getRequestByName(state, 'requestRouteName')
+  return {
+    list: req.response,
+    submitting: req.isProcessing
+  }
+})(MyComponent)
 
 ```
 
