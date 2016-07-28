@@ -47,6 +47,7 @@ export default (params) => {
         isSuccess: PropTypes.bool,
         isComplete: PropTypes.bool,
         createRequest: PropTypes.func,
+        clearRequest: PropTypes.func,
         dispatch: PropTypes.func
       };
 
@@ -74,6 +75,17 @@ export default (params) => {
           this.props.dispatch(this.props.createRequest(requestParams))
         }
         this.checkEvents()
+      }
+
+      componentWillUnmount () {
+        if (params.onUnmount) {
+          params.onUnmount(this.props.request, this.props.dispatch)
+        }
+
+        if (params.clearOnUnmount) {
+          console.log('clear on unmount', params)
+          this.props.dispatch(this.props.clearRequest(routeName))
+        }
       }
 
       componentWillReceiveProps (nextProps) {
