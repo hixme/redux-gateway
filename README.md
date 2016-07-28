@@ -16,7 +16,7 @@ import MyComponent from 'path/to/MyComponent'
 import notification from 'path/to/notification'
 
 const SearchRequestForm = connectRequest({
-  route: constants.SEARCH_PLANS_ROUTE,
+  route: 'searchPlansRoute',
   requestOnMount: true,
   onProcessing: (request, dispatch) => {
     dispatch(notification({message: 'In progress'}))
@@ -46,6 +46,22 @@ createRequest({route: 'apiGatewayRoute', body: {name: 'value'}})
 // with dispatch
 dispatch(gateway.actions.createRequest({route: 'apiGatewayRoute'}))
 dispatch(createRequest({route: 'apiGatewayRoute'}))
+
+```
+
+#### Clear request / dispatch clear request
+This resets the request object back to the initial model state
+
+```javascript
+import gateway, { clearRequest } from 'redux-gateway'
+
+// clear request
+gateway.actions.clearRequest('apiGatewayRoute')
+clearRequest('apiGatewayRoute')
+
+// with dispatch
+dispatch(gateway.actions.clearRequest('apiGatewayRoute'))
+dispatch(clearRequest('apiGatewayRoute'))
 
 ```
 
@@ -110,7 +126,40 @@ import MyComponent from 'path/to/MyComponent'
 
 const SearchRequestForm = connectRequest({
   route: 'searchPlansRoute',
-  requestOnMountBody: (props) => ({name: 'First', last: 'Last'}),
+  requestOnMountBody: (props) => ({name: 'First', last: 'Last'})
+})(MyComponent)
+
+```
+
+#### On unmount
+
+If you need to do anything on unmount, you have access to the request object and dispatch
+with the `onUnmount` callback
+
+```javascript
+import { connectRequest } from 'redux-gateway'
+import MyComponent from 'path/to/MyComponent'
+
+const SearchRequestForm = connectRequest({
+  route: 'searchPlansRoute',
+  onUnmount: (request, dispatch) => {
+    dispatch(customAction(request))
+  }
+})(MyComponent)
+
+```
+
+#### Clear pn unmount
+
+If you want to reset the request back to it's initial state, you can set the `clearOnUnmount` parameter
+
+```javascript
+import { connectRequest } from 'redux-gateway'
+import MyComponent from 'path/to/MyComponent'
+
+const SearchRequestForm = connectRequest({
+  route: 'searchPlansRoute',
+  clearOnUnmount: true
 })(MyComponent)
 
 ```
@@ -144,6 +193,7 @@ import { connectRequest } from 'redux-gateway'
 import MyComponent from 'path/to/MyComponent'
 
 const SearchRequestForm = connectRequest({
+  route: 'searchPlansRoute',
   onProcessing: (request, dispatch) => {
     console.log('onProcessing - ', request)
   },
