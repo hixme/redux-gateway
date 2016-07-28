@@ -1,4 +1,4 @@
-import { createReducer } from 'modules/redux-utils'
+import { createReducer } from './redux-utils'
 import t from './actionTypes'
 import reqReducer from './request-reducer'
 
@@ -56,6 +56,17 @@ export default createReducer(initialState, {
     return Object.assign({}, state, {
       totalProcessing: --state.totalProcessing,
       totalComplete: ++state.totalComplete,
+      requests
+    })
+  },
+  [t.REQUEST_CLEAR]: (state, payload) => {
+    var request = reqReducer(state.requests[payload.name], {type: t.REQUEST_CLEAR})
+
+    var requests = Object.assign({}, state.requests, {
+      [payload.name]: request
+    })
+
+    return Object.assign({}, state, {
       requests
     })
   }
