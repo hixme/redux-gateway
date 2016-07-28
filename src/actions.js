@@ -33,6 +33,13 @@ export const requestComplete = (name) => ({
   }
 })
 
+export const clearRequest = (name) => ({
+  type: t.REQUEST_CLEAR,
+  payload: {
+    name
+  }
+})
+
 export const createRequest = ({route, params, body, name}) => {
   name = (name || route)
   return (dispatch) => {
