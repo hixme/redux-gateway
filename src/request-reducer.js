@@ -43,6 +43,9 @@ const reducerMap = {
       isComplete: true,
       lastModified: new Date()
     })
+  },
+  [t.REQUEST_CLEAR]: (state) => {
+    return requestModel
   }
 }
 
