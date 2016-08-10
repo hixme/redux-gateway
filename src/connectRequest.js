@@ -5,6 +5,9 @@ import * as actions from './actions'
 
 export default (params) => {
   const routeName = params.name || params.route
+  const ProcessingView = params.processingView
+  const FailureView = params.failureView
+
   if (!routeName) {
     console.error('connectRequest: route is a required parameter')
   }
@@ -13,13 +16,13 @@ export default (params) => {
     // get configuration for state and dispatch props
     const { mapStateToProps, mapDispatchToProps } = params
 
-    const mapViewStateToProps = (state) => {
+    const mapViewStateToProps = (state, ownProps) => {
       const request = selectors.getRequestByName(state, routeName)
 
       // allow the user to configure the state and request props
       if (mapStateToProps) {
         return {
-          ...mapStateToProps(state, request),
+          ...mapStateToProps(state, ownProps, request),
           request
         }
       }
@@ -30,13 +33,8 @@ export default (params) => {
       }
     }
 
-    const mapViewDispatchToProps = (dispatch, request) => {
-      if (mapDispatchToProps) {
-        return mapDispatchToProps(dispatch)
-      }
+    let mapViewDispatchToProps = (mapDispatchToProps || actions)
 
-      return actions
-    }
     const ConnectedView = connect(mapViewStateToProps, mapViewDispatchToProps)(View)
 
     class GatewayEvent extends Component {
@@ -57,6 +55,14 @@ export default (params) => {
           requestOnMountParams,
           requestOnMountBody
         } = params
+
+        if (params.onMount) {
+          params.onMount(this.props, this.props.dispatch)
+        }
+
+        if (params.clearOnMount) {
+          this.props.dispatch(this.props.clearRequest(routeName))
+        }
 
         // make a request on mount if needed
         if (requestOnMount || requestOnMountParams || requestOnMountBody) {
@@ -79,11 +85,10 @@ export default (params) => {
 
       componentWillUnmount () {
         if (params.onUnmount) {
-          params.onUnmount(this.props.request, this.props.dispatch)
+          params.onUnmount(this.props, this.props.dispatch)
         }
 
         if (params.clearOnUnmount) {
-          console.log('clear on unmount', params)
           this.props.dispatch(this.props.clearRequest(routeName))
         }
       }
@@ -121,7 +126,17 @@ export default (params) => {
       }
 
       render () {
-        return (<ConnectedView {...this.props} />)
+        if (this.props.request.isProcessing && ProcessingView) {
+          return (<ProcessingView {...this.props} />)
+        }
+
+        if (this.props.request.isFailure && FailureView) {
+          return (<FailureView {...this.props} />)
+        }
+
+        return (
+          <ConnectedView {...this.props} />
+        )
       }
     }
 

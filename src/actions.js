@@ -44,13 +44,16 @@ export const createRequest = ({route, params, body, name}) => {
   name = (name || route)
   return (dispatch) => {
     dispatch(requestInit(name))
-    return gatewayRequest(route, {params, body})
-      .then((data) => {
-        dispatch(requestSuccess(name, data))
-        dispatch(requestComplete(name))
-      }, (error) => {
-        dispatch(requestFailure(name, error))
-        dispatch(requestComplete(name))
-      })
+    const request = gatewayRequest(route, {params, body})
+
+    request.then((data) => {
+      dispatch(requestSuccess(name, data))
+      dispatch(requestComplete(name))
+    }, (error) => {
+      dispatch(requestFailure(name, error))
+      dispatch(requestComplete(name))
+    })
+
+    return request
   }
 }
