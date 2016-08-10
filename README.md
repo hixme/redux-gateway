@@ -6,9 +6,15 @@ API gateway request lifecycle management with redux
 
 This gives you access to the reducer, constants, actions, and selectors available
 
+## connectRequest
+
 `import { connectRequest } from 'redux-gateway'`
 
-connectRequest is a higher-order-component that connects the request object to another component.  You can listen in on request events and dispatch other actions.
+connectRequest is a higher-order-component that connects the request object to another component.  
+You can listen in on request events and dispatch other actions.  You can add custom views to different request states,
+as well as add custom actions to the mount and unmount lifecycle events
+
+Below is the full interface for connectRequest, ordered in the sequence that the actions take place
 
 ```javascript
 import { connectRequest } from 'redux-gateway'
@@ -17,10 +23,43 @@ import notification from 'path/to/notification'
 
 const SearchRequestForm = connectRequest({
   route: 'searchPlansRoute',
+  // onMount
+  onMount: (props, dispatch) => {
+    dispatch(customAction(props.request))
+  },
+  clearOnMount: true,
+
+  // request on mount options
   requestOnMount: true,
+  requestOnMountParams: (props) => ({name: 'First', last: 'Last'}),
+  requestOnMountBody: (props) => ({name: 'First', last: 'Last'}),
+
+  // on unmount
+  onUnMount: (props, dispatch) => {
+    dispatch(customAction(props.request))
+  },
+  clearOnUnmount: true,
+
+  // state actions
   onProcessing: (request, dispatch) => {
     dispatch(notification({message: 'In progress'}))
-  }
+  },
+  onProcessing: (request, dispatch) => {
+    console.log('onProcessing - ', request)
+  },
+  onSuccess: (request, dispatch) => {
+    console.log('onSuccess - ', request)
+  },
+  onFailure: (request, dispatch) => {
+    console.log('onFailure - ', request.error)
+  },
+  onComplete: (request, dispatch) => {
+    console.log('onComplete - ', request)
+  },
+
+  // alternate views
+  processingView: LoadingView,
+  failureView: FailureView
 })(MyComponent)
 
 ```
