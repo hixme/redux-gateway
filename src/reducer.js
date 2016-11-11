@@ -13,7 +13,7 @@ const initialState = {
 
 export default createReducer(initialState, {
   [t.REQUEST_INIT]: (state, payload) => {
-    var request = reqReducer(undefined, {type: t.REQUEST_INIT, payload})
+    var request = reqReducer(state.requests[payload.name], {type: t.REQUEST_INIT, payload})
 
     var requests = Object.assign({}, state.requests, {
       [payload.name]: request
