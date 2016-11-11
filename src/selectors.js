@@ -13,3 +13,7 @@ export const getAllRequests = createSelector(
 export const getRequestByName = (state, routeName) => {
   return getAllRequests(state)[routeName] || requestModel
 }
+
+export const getResponseByRequestName = (state, routeName) => {
+  return getRequestByName(state, routeName).response;
+}
