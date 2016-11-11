@@ -2,8 +2,12 @@ import t from './actionTypes'
 
 export const requestModel = {
   name: '',
+  route: null,
+  params: null,
+  body: null,
   response: null,
   error: null,
+  isRefreshing: false,
   isProcessing: false,
   isFailure: false,
   isSuccess: false,
@@ -13,9 +17,23 @@ export const requestModel = {
 
 const reducerMap = {
   [t.REQUEST_INIT]: (state, payload) => {
+    const {
+      route,
+      params,
+      body,
+      name
+    } = payload
+
+    const isRefreshing = !!state.response
+
     return Object.assign({}, state, {
-      name: payload.name,
+      route,
+      params,
+      body,
+      name,
+      isRefreshing,
       isProcessing: true,
+      isComplete: false,
       lastModified: new Date()
     })
   },
@@ -39,6 +57,7 @@ const reducerMap = {
   },
   [t.REQUEST_COMPLETE]: (state) => {
     return Object.assign({}, state, {
+      isRefreshing,: false,
       isProcessing: false,
       isComplete: true,
       lastModified: new Date()
