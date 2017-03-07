@@ -13,13 +13,23 @@ const initialState = {
 
 export default createReducer(initialState, {
   [t.REQUEST_INIT]: (state, payload) => {
+    // if the request is processing, we need to decrement it
+    let totalProcessing = state.totalProcessing
+    // const { isProcessing } = state.requests[payload.name] || {}
+    // if (isProcessing) {
+    //   --totalProcessing
+    // }
+
     var request = reqReducer(state.requests[payload.name], {type: t.REQUEST_INIT, payload})
 
     var requests = Object.assign({}, state.requests, {
       [payload.name]: request
     })
+
+    ++totalProcessing
     return Object.assign({}, state, {
-      totalProcessing: ++state.totalProcessing,
+      // prevent totalProcessing from becoming less than zero
+      totalProcessing: (totalProcessing < 1) ? 1 : totalProcessing,
       requests
     })
   },
@@ -29,8 +39,9 @@ export default createReducer(initialState, {
     const requests = Object.assign({}, state.requests, {
       [payload.name]: request
     })
+
     return Object.assign({}, state, {
-      totalSuccess: ++state.totalSuccess,
+      totalSuccess: (state.totalSuccess + 1),
       requests
     })
   },
@@ -42,7 +53,7 @@ export default createReducer(initialState, {
     })
 
     return Object.assign({}, state, {
-      totalFailure: ++state.totalFailure,
+      totalFailure: (state.totalFailure + 1),
       requests
     })
   },
@@ -54,12 +65,16 @@ export default createReducer(initialState, {
     })
 
     return Object.assign({}, state, {
-      totalProcessing: --state.totalProcessing,
-      totalComplete: ++state.totalComplete,
+      totalProcessing: (state.totalProcessing - 1),
+      totalComplete: (state.totalComplete + 1),
       requests
     })
   },
   [t.REQUEST_CLEAR]: (state, payload) => {
+    // if the request is processing, we need to decrement it
+    // const { isProcessing } = state.requests[payload.name] || {}
+    // const totalProcessing = (isProcessing) ? --state.totalProcessing : state.totalProcessing
+
     var request = reqReducer(state.requests[payload.name], {type: t.REQUEST_CLEAR})
 
     var requests = Object.assign({}, state.requests, {
@@ -68,6 +83,7 @@ export default createReducer(initialState, {
 
     return Object.assign({}, state, {
       requests
+      // totalProcessing
     })
   }
 })
