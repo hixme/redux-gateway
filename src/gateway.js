@@ -7,7 +7,7 @@ export const setGateway = (apigClient) => {
 }
 
 const createError = (message) => {
-  let status = 400
+  let status = 500
 
   if (message === 'Process exited before completing request') {
     message = 'An unknown error occurred'
@@ -20,15 +20,28 @@ const createError = (message) => {
     message
   }
 
+  console.error('API error: ' + JSON.stringify(e))
+
   return e
 }
 
-export const gatewayRequest = (route, {params, body, additionalParams} = { }) => {
-  return new Promise((resolve, reject) => {
+export const gatewayRequest = (route, { params, body, additionalParams } = { }) => new Promise((resolve, reject) => {
+  if (!gateway[route]) {
+    reject(createError({
+      status: 999,
+      message: `redux-gateway: ${route} not available. Is this endpoint available in your environment?`
+    }))
+  } else {
     gateway[route](params, body, additionalParams)
       .then((response) => {
-        const data = response.data
-        if (data.errorMessage) {
+        const { data } = response
+
+        // if data is null - throw error :: data should not be null
+        // else if data.errorMessage is present - throw error
+        // else resolve
+        if (data === null) {
+          reject(createError('Bad response from server. API should not return null'))
+        } else if (data.errorMessage) {
           reject(createError(data.errorMessage))
         } else {
           resolve(data)
@@ -36,5 +49,5 @@ export const gatewayRequest = (route, {params, body, additionalParams} = { }) =>
       }, (error) => {
         reject(createError(error))
       })
-  })
-}
+  }
+})
