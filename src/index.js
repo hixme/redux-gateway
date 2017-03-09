@@ -6,9 +6,22 @@ import reducer from './reducer'
 
 export { setGateway } from './gateway'
 export connectRequest from './connectRequest'
+
+// selectors
+export const getStats = selectors.getStats
+export const getRecentErrors = selectors.getRecentErrors
+export const isDebug = selectors.isDebug
+
 export const getRequestByName = selectors.getRequestByName
+export const getResponseByRequestName = selectors.getResponseByRequestName
+export const getRouteByRequestName = selectors.getRouteByRequestName
+export const getParamsByRequestName = selectors.getParamsByRequestName
+export const getBodyByRequestName = selectors.getBodyByRequestName
+
+// actions
 export const createRequest = actions.createRequest
 export const clearRequest = actions.clearRequest
+export const retryRequestByName = actions.retryRequestByName
 
 export default {
   actions,
